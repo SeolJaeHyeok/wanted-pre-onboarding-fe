@@ -9,7 +9,7 @@ const Container = styled.section`
   border: 5px solid white;
   border-radius: 5px;
   width: 400px;
-  height: 355px;
+  height: 357px;
   margin: 0 auto 0 auto;
   position: absolute;
   top: 20%;

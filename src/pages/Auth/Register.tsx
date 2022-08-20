@@ -1,13 +1,13 @@
-import React, { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { FormEvent, MouseEvent, useState } from "react";
 import styled from "styled-components"
+import {useNavigate} from "react-router-dom"
 
-const LoginContainer = styled.div`
+const RegisterContainer = styled.div`
   background-color: white;
   border: 5px solid white;
   border-radius: 5px;
   width: 400px;
-  height: 318px;
+  height: 387px;
   margin: 0 auto 0 auto;
   position: absolute;
   top: 20%;
@@ -55,39 +55,41 @@ const EnterButton = styled.button`
   margin-top: 20px;
 `
 
-const RegisterButton = styled(EnterButton)`
+const HomeButton = styled(EnterButton)`
   margin-top: 5px;
 `
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
 
-
-  const handleSignIn = (e: FormEvent) => {
+  const handleRegister = (e: FormEvent) => {
     e.preventDefault();
-    console.log('Sign In 요청');
-    console.log(email, password);
+    console.log('Sign Up 요청')
+    console.log(email, password)
   }
 
-  const handleRegister = () => {
-    navigate('/register');
-  };
+  const handleHomeClick = (e: MouseEvent) => {
+    navigate('/');
+  }
   
-  return <LoginContainer>
+  return <RegisterContainer>
     <TitleContainer>
-      <Title>로그인</Title>
+      <Title>회원가입</Title>
     </TitleContainer>
-    <UserInfoForm onSubmit={handleSignIn}>
+    <UserInfoForm onSubmit={handleRegister}>
       <InfoTitle>이메일</InfoTitle>
-      <EmailInfo value={email} onChange={(e) => setEmail(e.target.value) }/>
+      <EmailInfo value={email} onChange={(e) => setEmail(e.target.value)}></EmailInfo>
       <InfoTitle>비밀번호</InfoTitle>
-      <PasswordInfo type="password" value={password} onChange={(e) => setPassword(e.target.value) }/>
-      <EnterButton type="submit">들어가기</EnterButton>
+      <PasswordInfo type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <InfoTitle>비밀번호 확인</InfoTitle>
+      <PasswordInfo type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
+      <EnterButton type="submit">가입하기</EnterButton>
     </UserInfoForm>
-    <RegisterButton onClick={handleRegister}>회원가입</RegisterButton>
-  </LoginContainer>
+    <HomeButton onClick={handleHomeClick}>홈으로 이동</HomeButton>
+  </RegisterContainer>
 };
 
-export default Login;
+export default Register;
