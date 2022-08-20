@@ -1,8 +1,10 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import styled from "styled-components"
+import {useNavigate} from "react-router-dom"
+
 import { GreetingImg } from "./components/GreetingImage";
 
-const LoginContainer = styled.section`
+const Container = styled.section`
   background-color: white;
   border: 5px solid white;
   border-radius: 5px;
@@ -19,22 +21,12 @@ const TitleContainer = styled.div`
   border-bottom: 1px solid #eeeeee;
   text-align: center;
   background-color: inherit;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
   padding: 15px;
 `;
 
 const Title = styled.span``;
-
-const CloseButton = styled.button`
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-  border: none;
-  background-color: inherit;
-`;
 
 const LoginMenu = styled.div``;
 
@@ -58,17 +50,26 @@ const RegisterButton = styled(AuthButton)`
 `
 
 const Home = () => { 
-  return <LoginContainer>
+  const navigate = useNavigate();
+
+  const handleLogin = (e: MouseEvent) => {
+    navigate('/login')
+  }
+
+  const handleRegister = (e: MouseEvent) => {
+    navigate('/register');
+  }
+
+  return <Container>
     <TitleContainer>
         <Title>로그인 또는 회원가입</Title>
-        <CloseButton>X</CloseButton>
       </TitleContainer>
       <LoginMenu>
         <GreetingImg />
-        <LoginButton>로그인</LoginButton>
-        <RegisterButton>회원가입</RegisterButton>
+        <LoginButton onClick={handleLogin}>로그인</LoginButton>
+        <RegisterButton onClick={handleRegister}>회원가입</RegisterButton>
       </LoginMenu>
-  </LoginContainer>
+  </Container>
 };
 
 export default Home;
