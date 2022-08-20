@@ -7,5 +7,6 @@ declare module "styled-components" {
     boardColor: string;
     btnColor: string;
     checkBoxColor: string;
+    warnColor: string;
   }
 }

@@ -1,13 +1,15 @@
-import React, { FormEvent, MouseEvent, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import styled from "styled-components"
 import {useNavigate} from "react-router-dom"
+import { validataPassword, validateEmail } from "../../utils/func";
+import { authApi } from "../../lib/api";
 
 const RegisterContainer = styled.div`
   background-color: white;
   border: 5px solid white;
   border-radius: 5px;
   width: 400px;
-  height: 387px;
+  height: 337px;
   margin: 0 auto 0 auto;
   position: absolute;
   top: 20%;
@@ -53,10 +55,11 @@ const EnterButton = styled.button`
   opacity: 0.8;
   border: none;
   margin-top: 20px;
-`
-
-const HomeButton = styled(EnterButton)`
-  margin-top: 5px;
+  :disabled {
+    background-color: ${({theme}) => theme.bgColor};
+    color: ${({theme}) => theme.warnColor};
+    font-weight: bold;
+  }
 `
 
 const Register = () => {
@@ -64,17 +67,31 @@ const Register = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-
-  const handleRegister = (e: FormEvent) => {
-    e.preventDefault();
-    console.log('Sign Up 요청')
-    console.log(email, password)
-  }
-
-  const handleHomeClick = (e: MouseEvent) => {
-    navigate('/');
-  }
+  const [isInvalid, setIsInvalid] = useState<boolean>(true);
   
+  const handleRegister = useCallback(async (e: FormEvent) => {
+    try {
+      e.preventDefault();
+      await authApi.signUp({email, password});
+      
+      // 회원 가입 완료 시 로그인 유도
+      alert('회원가입이 성공적으로 이루어졌습니다:)')
+      navigate('/login');
+    } catch(e: any) {
+      // Error Message 출력
+      const {response: {data: {message}}} = e;
+      alert(message);
+      window.location.reload();
+    }
+  }, [password, email, navigate]);
+
+  useEffect(() => {
+    setIsInvalid(true)
+    if (validateEmail(email) && validataPassword(password, passwordConfirm)) {
+      setIsInvalid(false);
+    }
+  }, [email, password, passwordConfirm])
+
   return <RegisterContainer>
     <TitleContainer>
       <Title>회원가입</Title>
@@ -86,9 +103,8 @@ const Register = () => {
       <PasswordInfo type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       <InfoTitle>비밀번호 확인</InfoTitle>
       <PasswordInfo type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
-      <EnterButton type="submit">가입하기</EnterButton>
+      <EnterButton disabled={isInvalid} type="submit">{!isInvalid ? "Sign Up" : "Invalid"}</EnterButton>
     </UserInfoForm>
-    <HomeButton onClick={handleHomeClick}>홈으로 이동</HomeButton>
   </RegisterContainer>
 };
 
