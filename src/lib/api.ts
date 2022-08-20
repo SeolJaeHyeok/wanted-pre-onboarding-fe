@@ -7,7 +7,11 @@ const axiosInstance = axios.create({
 });
 
 export const authApi = {
-  signIn: () => axiosInstance.post(`/auth/signin`),
+  signIn: (bodyData: {email: string, password: string}) => axiosInstance.post('/auth/signin', bodyData, {
+    headers: {
+      "Content-Type": "application/json",
+    }
+  }),
   signUp: (bodyData: {email: string, password: string}) => axiosInstance.post('/auth/signup', bodyData, {
     headers: {
       "Content-Type": "application/json",

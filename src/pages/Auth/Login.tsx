@@ -1,6 +1,8 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
+import { authApi } from "../../lib/api";
+import { decodeJWT } from "../../utils/func";
 
 const LoginContainer = styled.div`
   background-color: white;
@@ -64,12 +66,21 @@ const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-
-  const handleSignIn = (e: FormEvent) => {
-    e.preventDefault();
-    console.log('Sign In 요청');
-    console.log(email, password);
-  }
+  // 로그인 요청
+  const handleSignIn = useCallback(async (e: FormEvent) => {
+    try {
+      // 성공 시 로컬 스토리지에 저장 후 Redirect
+      e.preventDefault();
+      const {data: {access_token}} = await authApi.signIn({email, password})
+      localStorage.setItem('token', access_token);
+      navigate('/todo')
+    } catch(e: any) {
+      // 실패 시 에러 메세지 출력
+      const {response: {data: {message}}} = e;
+      alert(message);
+      window.location.reload();
+    }
+  }, [email, password])
 
   const handleRegister = () => {
     navigate('/register');

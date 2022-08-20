@@ -1,8 +1,9 @@
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, useEffect } from "react";
 import styled from "styled-components"
 import {useNavigate} from "react-router-dom"
 
 import { GreetingImg } from "./components/GreetingImage";
+import { getToken } from "../../utils/func";
 
 const Container = styled.section`
   background-color: white;
@@ -59,6 +60,13 @@ const Home = () => {
   const handleRegister = (e: MouseEvent) => {
     navigate('/register');
   }
+
+  useEffect(() => {
+    // 토큰이 있다면 Redirect
+    if (getToken()) {
+      navigate('/todo');
+    }
+  }, [])
 
   return <Container>
     <TitleContainer>
