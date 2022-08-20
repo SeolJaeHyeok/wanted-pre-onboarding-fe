@@ -10,6 +10,10 @@ const GlobalStyle = styled.createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+  body {
+    background-color: #e9ecef;
+  }
+  
 `;
 
 export default GlobalStyle;
