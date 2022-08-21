@@ -19,3 +19,28 @@ export const authApi = {
   })
 }
 
+
+export const todoApi = {
+  createTodo: (bodyData: {todo: string}, token: string) => axiosInstance.post('/todos', bodyData, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  }),
+  getTodos: (token: string) => axiosInstance.get('/todos', {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  }),
+  updateTodo: (bodyData: {todo: string, isCompleted: boolean}, id: number, token: string) => axiosInstance.put(`/todos/${id}`, bodyData, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  }),
+  deleteTodo: (id: number, token: string) => axiosInstance.delete(`/todo/${id}`, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  }) 
+}
