@@ -137,14 +137,15 @@ const ToDoItem = ({ todo }: { todo: IToDo }) => {
   const handleEdit = useCallback(async (id: number) => {
     try {
       await todoApi.updateTodo({todo: value, isCompleted}, id, getToken());
-      navigate('/todo');
       setMode('read');
+      setReadOnly(true);
+      navigate('/todo');
     } catch(e: any) {
       const {response: {data: { message }}} = e;
       alert(message);
       window.location.reload();
     }
-  }, [value, isCompleted]);
+  }, [value, isCompleted, mode]);
 
   return (
     <Container>
@@ -152,7 +153,13 @@ const ToDoItem = ({ todo }: { todo: IToDo }) => {
         {todo.isCompleted ? 
           <MdCheckBox onClick={() => handleToggleCheckbox(todo.id)} size={20} /> 
           : <MdCheckBoxOutlineBlank onClick={() => handleToggleCheckbox(todo.id)} size={20} />}
-        <Content ref={inputRef} readOnly={readOnly} value={value} onChange={(e) => setValue(e.target.value)} isCompleted={todo.isCompleted}></Content>
+        <Content
+          ref={inputRef} 
+          readOnly={readOnly} 
+          value={value} 
+          onChange={(e) => setValue(e.target.value)} 
+          isCompleted={todo.isCompleted}
+        />
       </CheckBox>
       {mode === 'read' && 
         <>
