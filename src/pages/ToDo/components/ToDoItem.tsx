@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { MdCheckBox, MdCheckBoxOutlineBlank, MdRemoveCircleOutline, MdEditNote } from "react-icons/md";
 import { IToDo } from "../../../utils/interface";
+import { todoApi } from "../../../lib/api";
+import { getToken } from "../../../utils/func";
 
 const Container = styled.div`
   padding: 1rem;
@@ -97,8 +99,15 @@ const ToDoItem = ({ todo }: { todo: IToDo }) => {
   }
 
   // 아이템 삭제
-  const handleDelete = (id: number) => {
-    console.log('아이템 삭제', id);
+  const handleDelete = async (id: number) => {
+    try {
+      await todoApi.deleteTodo(id, getToken());
+    } catch(e: any) {
+      const {response: {data: { message }}} = e;
+      alert(message);
+      window.location.reload();
+    }
+    
   }
 
   // 아이템 수정

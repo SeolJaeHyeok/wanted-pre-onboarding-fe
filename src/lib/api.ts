@@ -38,7 +38,7 @@ export const todoApi = {
       "Authorization": `Bearer ${token}`
     }
   }),
-  deleteTodo: (id: number, token: string) => axiosInstance.delete(`/todo/${id}`, {
+  deleteTodo: (id: number, token: string | null) => axiosInstance.delete(`/todos/${id}`, {
     headers: {
       "Authorization": `Bearer ${token}`
     }
