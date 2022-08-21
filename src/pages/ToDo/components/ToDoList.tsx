@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { IToDo } from "../../../utils/interface";
 import ToDoItem from "./ToDoItem";
 
 const Container = styled.div`
@@ -8,16 +9,10 @@ const Container = styled.div`
   overflow-y: auto;
 `;
 
-const ToDoList = () => {
+const ToDoList = ({todos}: {todos: IToDo[]}) => {
   return (
     <Container>
-      <ToDoItem />
-      <ToDoItem />
-      <ToDoItem />
-      <ToDoItem />
-      <ToDoItem />
-      <ToDoItem />
-      <ToDoItem />
+      {todos.map(todo => <ToDoItem todo={todo} key={todo.id} />)}
     </Container>
   )
 };

@@ -27,7 +27,7 @@ export const todoApi = {
       "Authorization": `Bearer ${token}`
     }
   }),
-  getTodos: (token: string) => axiosInstance.get('/todos', {
+  getTodos: (token: string | null) => axiosInstance.get('/todos', {
     headers: {
       "Authorization": `Bearer ${token}`
     }
