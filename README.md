@@ -4,7 +4,7 @@
 
 회원가입 및 로그인 기능이 제공 되는 Todo List 애플리케이션입니다.
 
-데모 영상은 [여기](www.naver.com)에서 확인하실 수 있습니다.
+데모 영상은 [여기](https://youtu.be/CsxWluFf8vE)에서 확인하실 수 있습니다.
 
 ## Features
 
