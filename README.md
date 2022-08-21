@@ -50,9 +50,9 @@
 
 3. `Set` environment variables
 
-   1. 내려받은 프로젝트의 `src` 폴더 안에 `.env` 파일을 생성합니다.
+   1. 내려받은 프로젝트의 최상위 폴더 안에 `.env` 파일을 생성합니다.
 
-   2. `.envTemplate` 파일에 존재하는 환경 변수 이름과 같은 이름의 환경 변수(`API_URL`)를 생성합니다.
+   2. `.envTemplate` 파일에 존재하는 환경 변수 이름과 같은 이름의 환경 변수(`API_URL`)를 `.env` 파일 안에 생성합니다.
 
    3. 환경 변수 값에 해당하는 `API_URL`의 주소는 [여기](https://github.com/walking-sunset/selection-task)에서 확인하실 수 있습니다.
 
