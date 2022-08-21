@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import styled from "styled-components";
-import { MdCheckBox, MdCheckBoxOutlineBlank, MdRemoveCircleOutline, MdEditNote } from "react-icons/md";
+import { MdCheckBox, MdCheckBoxOutlineBlank, MdRemoveCircleOutline, MdEditNote, MdAdd, MdReplay } from "react-icons/md";
 import { IToDo } from "../../../utils/interface";
 import { todoApi } from "../../../lib/api";
 import { getToken } from "../../../utils/func";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 1rem;
@@ -65,41 +66,64 @@ const BackButton = styled.div`
   display: flex;
   align-items: center;
   font-size: 1.5rem;
-  color: ${({theme}) => theme.warnColor};
+  color: ${({theme}) => theme.btnColor};
   cursor: pointer;
   margin-left: 5px;
+  padding: 5px;
 
   &:hover {
-    color: #ff8787;
+    color: #3fd1e2;
+    background-color: #c7edf1;
   }
 `;
 
-const EditButton = styled.div``;
+const EditButton = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  color: ${({theme}) => theme.btnColor};
+  cursor: pointer;
+  padding: 5px;
+
+  &:hover {
+    color: #3fd1e2;
+    background-color: #c7edf1;
+  }
+`;
 
 const ToDoItem = ({ todo }: { todo: IToDo }) => {
-  const contentRef = useRef(null);
-  
-  const [value, setValue] = useState<string>("");
-  const [mode, setMode] = useState<string>("");
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [value, setValue] = useState<string>(todo.todo);
+  const [isCompleted, setIsCompleted] = useState<boolean>(!todo.isCompleted);
+  const [mode, setMode] = useState<string>("read");
   const [readOnly, setReadOnly] = useState<boolean>(true);
   const [prevValue, setPrevValue] = useState<string>("");
 
+  // CheckBox Toggle
+  const handleToggleCheckbox = (id: number) => {
+    setIsCompleted(prev => !prev);
+    handleEdit(id);
+  }
+
   // 수정 모드로 변환
-  const handleUpdateMode = () => {
+  const handleUpdateMode = useCallback(() => {
     setMode('edit'); // 수정 모드로 변환
     setReadOnly(false); // 수정 가능
     setPrevValue(value); // 기존 todo 값 저장
-  }
+    inputRef.current?.focus();
+  }, [mode]);
   
   // 수정 취소
-  const handleDefaultMode = () => {
+  const handleDefaultMode = useCallback(() => {
     setMode('read'); // 기존 모드로 변경
     setReadOnly(true); // 읽기 전용으로 설정
     setValue(prevValue); // 수정 취소를 누를 경우 기존의 값 설정
-  }
+  }, [mode]);
 
   // 아이템 삭제
-  const handleDelete = async (id: number) => {
+  const handleDelete = useCallback(async (id: number) => {
     try {
       await todoApi.deleteTodo(id, getToken());
     } catch(e: any) {
@@ -107,24 +131,28 @@ const ToDoItem = ({ todo }: { todo: IToDo }) => {
       alert(message);
       window.location.reload();
     }
-    
-  }
+  }, []);
 
   // 아이템 수정
-  const handleEdit = (id: number) => {
-    console.log('아이템 수정', value, id);
-  }
-
-  useEffect(() => {
-    setValue(todo.todo);
-    setMode("read");
-  }, []);
+  const handleEdit = useCallback(async (id: number) => {
+    try {
+      await todoApi.updateTodo({todo: value, isCompleted}, id, getToken());
+      navigate('/todo');
+      setMode('read');
+    } catch(e: any) {
+      const {response: {data: { message }}} = e;
+      alert(message);
+      window.location.reload();
+    }
+  }, [value, isCompleted]);
 
   return (
     <Container>
       <CheckBox isCompleted={todo.isCompleted}>
-        {todo.isCompleted ? <MdCheckBox size={20} /> : <MdCheckBoxOutlineBlank size={20} />}
-        <Content readOnly={readOnly} ref={contentRef} value={value} onChange={(e) => setValue(e.target.value)} isCompleted={todo.isCompleted}></Content>
+        {todo.isCompleted ? 
+          <MdCheckBox onClick={() => handleToggleCheckbox(todo.id)} size={20} /> 
+          : <MdCheckBoxOutlineBlank onClick={() => handleToggleCheckbox(todo.id)} size={20} />}
+        <Content ref={inputRef} readOnly={readOnly} value={value} onChange={(e) => setValue(e.target.value)} isCompleted={todo.isCompleted}></Content>
       </CheckBox>
       {mode === 'read' && 
         <>
@@ -139,10 +167,10 @@ const ToDoItem = ({ todo }: { todo: IToDo }) => {
       {mode === 'edit' && 
         <>
           <EditButton onClick={() => handleEdit(todo.id)}>
-            🔗
+            <MdAdd size={20} />
           </EditButton>
           <BackButton onClick={handleDefaultMode}>
-            →
+            <MdReplay size={20} />
           </BackButton>
         </> 
       }

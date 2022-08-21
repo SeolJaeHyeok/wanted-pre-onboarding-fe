@@ -32,7 +32,7 @@ export const todoApi = {
       "Authorization": `Bearer ${token}`
     }
   }),
-  updateTodo: (bodyData: {todo: string, isCompleted: boolean}, id: number, token: string) => axiosInstance.put(`/todos/${id}`, bodyData, {
+  updateTodo: (bodyData: {todo: string, isCompleted: boolean}, id: number, token: string | null) => axiosInstance.put(`/todos/${id}`, bodyData, {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
