@@ -7,42 +7,15 @@ import ToDoInsert from "./components/ToDoInsert";
 import ToDoList from "./components/ToDoList";
 import ToDoTemplate from "./components/ToDoTemplate";
 
-const todos = [
-  {
-    "id": 1,
-    "todo": "todo2",
-    "isCompleted": false,
-    "userId": 1
-  },
-  {
-    "id": 2,
-    "todo": "todo3",
-    "isCompleted": false,
-    "userId": 1
-  },
-  {
-    "id": 3,
-    "todo": "todo3",
-    "isCompleted": true,
-    "userId": 2
-  },
-  {
-    "id": 4,
-    "todo": "todo4",
-    "isCompleted": true,
-    "userId": 2
-  }
-]
-
 const ToDo = () => {
   const navigate = useNavigate();
-  // const [todos, setTodos] = useState<IToDo[]>([]);
+  const [todos, setTodos] = useState<IToDo[]>([]);
   
   // Todo 데이터 불러오기
   const getTodosFromApi = async () => {
     try {
-      // const response = await todoApi.getTodos(getToken());
-      // setTodos(response.data);
+      const response = await todoApi.getTodos(getToken());
+      setTodos(response.data);
     } catch(e) {
       console.log(e);
     }

@@ -1,6 +1,8 @@
 import React, { FormEvent, useCallback, useState } from "react";
 import styled from "styled-components";
 import {MdAdd} from "react-icons/md";
+import { todoApi } from "../../../lib/api";
+import { getToken } from "../../../utils/func";
 
 const ToDoForm = styled.form`
   display: flex;
@@ -46,8 +48,21 @@ const ToDoInsert = () => {
     setValue(e.currentTarget.value);
   }, []);
 
+  // Create To Do
+  const handleSubmit = async (e: FormEvent) => {
+    try {
+      e.preventDefault();
+      await todoApi.createTodo({todo: value}, getToken())
+      setValue("");
+    } catch(e: any) {
+      const {response: {data: { message }}} = e;
+      alert(message);
+      window.location.reload();
+    }
+  }
+
   return (
-    <ToDoForm onSubmit={(e) => e.preventDefault()}>
+    <ToDoForm onSubmit={handleSubmit}>
       <ToDoInput
         value={value}
         placeholder="할 일을 입력하세요."

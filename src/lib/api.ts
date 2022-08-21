@@ -21,7 +21,7 @@ export const authApi = {
 
 
 export const todoApi = {
-  createTodo: (bodyData: {todo: string}, token: string) => axiosInstance.post('/todos', bodyData, {
+  createTodo: (bodyData: {todo: string}, token: string | null) => axiosInstance.post('/todos', bodyData, {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
