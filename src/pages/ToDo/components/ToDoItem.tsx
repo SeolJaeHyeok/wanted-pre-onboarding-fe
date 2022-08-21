@@ -80,27 +80,30 @@ const ToDoItem = ({ todo }: { todo: IToDo }) => {
   const [value, setValue] = useState<string>("");
   const [mode, setMode] = useState<string>("");
   const [readOnly, setReadOnly] = useState<boolean>(true);
+  const [prevValue, setPrevValue] = useState<string>("");
 
   // 수정 모드로 변환
   const handleUpdateMode = () => {
-    setMode('edit');
-    setReadOnly(false);
+    setMode('edit'); // 수정 모드로 변환
+    setReadOnly(false); // 수정 가능
+    setPrevValue(value); // 기존 todo 값 저장
   }
   
-  // 읽기 모드로 변환
+  // 수정 취소
   const handleDefaultMode = () => {
-    setMode('read');
-    setReadOnly(true);
+    setMode('read'); // 기존 모드로 변경
+    setReadOnly(true); // 읽기 전용으로 설정
+    setValue(prevValue); // 수정 취소를 누를 경우 기존의 값 설정
   }
 
   // 아이템 삭제
-  const handleDelete = () => {
-    console.log('아이템 삭제')
+  const handleDelete = (id: number) => {
+    console.log('아이템 삭제', id);
   }
 
   // 아이템 수정
-  const handleEdit = () => {
-    console.log('아이템 수정', value);
+  const handleEdit = (id: number) => {
+    console.log('아이템 수정', value, id);
   }
 
   useEffect(() => {
@@ -115,18 +118,18 @@ const ToDoItem = ({ todo }: { todo: IToDo }) => {
         <Content readOnly={readOnly} ref={contentRef} value={value} onChange={(e) => setValue(e.target.value)} isCompleted={todo.isCompleted}></Content>
       </CheckBox>
       {mode === 'read' && 
-      <>
-        <UpdateButton onClick={handleUpdateMode}>
-          <MdEditNote />
-        </UpdateButton>
-        <DeleteButton onClick={handleDelete}>
-          <MdRemoveCircleOutline />
-        </DeleteButton>
-      </>
+        <>
+          <UpdateButton onClick={handleUpdateMode}>
+            <MdEditNote />
+          </UpdateButton>
+          <DeleteButton onClick={() => handleDelete(todo.id)}>
+            <MdRemoveCircleOutline />
+          </DeleteButton>
+        </>
       }
       {mode === 'edit' && 
         <>
-          <EditButton onClick={handleEdit}>
+          <EditButton onClick={() => handleEdit(todo.id)}>
             🔗
           </EditButton>
           <BackButton onClick={handleDefaultMode}>
