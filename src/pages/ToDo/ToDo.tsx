@@ -1,9 +1,16 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../../utils/func";
-import ToDoInput from "./components/ToDoInput";
+import ToDoInsert from "./components/ToDoInsert";
 import ToDoList from "./components/ToDoList";
 import ToDoTemplate from "./components/ToDoTemplate";
+
+interface IToDo {
+  id: number;
+  todo: string;
+  isCompleted: boolean;
+  userId: number
+}
 
 const ToDo = () => {
   const navigate = useNavigate();
@@ -16,7 +23,7 @@ const ToDo = () => {
   }, []);
 
   return <ToDoTemplate>
-    <ToDoInput />
+    <ToDoInsert/>
     <ToDoList />
   </ToDoTemplate>;
 }
